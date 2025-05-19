@@ -20,12 +20,12 @@ This is a RESTful API service that provides user authentication functionality in
 
 Clone the repository:
 ```bash
-git clone https://github.com/aliroohan/image-_forensics_backend.git
+git clone https://github.com/aliroohan/image_forensics_backend.git
 ```
 
 Install dependencies:
 ```bash
-cd image-_forensics_backend
+cd image_forensics_backend
 npm install
 ```
 
@@ -169,8 +169,3 @@ npm start
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
-
-## Contact
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/yourusername/your-repo-name](https://github.com/yourusername/your-repo-name)
