@@ -18,7 +18,10 @@ app.use(bodyParser.json());
 
 
 app.use('/api/user', userRoutes);
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 
+})
 
 
 app.listen(process.env.PORT, () => {
