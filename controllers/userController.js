@@ -23,12 +23,19 @@ exports.registerUser = async (req, res) => {
         if (userExists) {
             return res.status(400).json({ message: 'User with this email or username already exists' });
         }
-         await email_existance.check(email, await function(err, response)
+        let email_check = false;
+        email_existance.check(email, await function(error, response)
         {
-            if (!response) {
-                return res.status(400).json({ message: 'Email does not exist' });
-            }
+            console.log(response);
+            email_check = response;
+
         })
+        if (email_check) {
+            return res.status(400).json({
+                message: 'Email does not exist'
+            })
+        }
+
 
 
         const user = await User.create({
