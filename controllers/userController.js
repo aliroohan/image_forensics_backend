@@ -19,37 +19,15 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
+        // Email regex validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Wrong email address' });
+        }
+
         const userExists = await User.findOne({ $or: [{ email }, { username }] });
         if (userExists) {
             return res.status(400).json({ message: 'User with this email or username already exists' });
-        }
-
-        // Wrap email_existance.check in a Promise to use await
-        let emailExists;
-        try {
-            emailExists = await new Promise((resolve, reject) => {
-                email_existance.check(email, function(error, response) {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(response);
-                    }
-                });
-            });
-        } catch (error) {
-            if (error && error.code === 'ENOTFOUND') {
-                return res.status(400).json({
-                    message: 'Email domain does not exist'
-                });
-            } else {
-                throw error;
-            }
-        }
-
-        if (!emailExists) {
-            return res.status(400).json({
-                message: 'Email does not exist'
-            });
         }
 
         const user = await User.create({
