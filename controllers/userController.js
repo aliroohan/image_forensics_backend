@@ -25,15 +25,26 @@ exports.registerUser = async (req, res) => {
         }
 
         // Wrap email_existance.check in a Promise to use await
-        const emailExists = await new Promise((resolve, reject) => {
-            email_existance.check(email, function(error, response) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(response);
-                }
+        let emailExists;
+        try {
+            emailExists = await new Promise((resolve, reject) => {
+                email_existance.check(email, function(error, response) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(response);
+                    }
+                });
             });
-        });
+        } catch (error) {
+            if (error && error.code === 'ENOTFOUND') {
+                return res.status(400).json({
+                    message: 'Email domain does not exist'
+                });
+            } else {
+                throw error;
+            }
+        }
 
         if (!emailExists) {
             return res.status(400).json({
