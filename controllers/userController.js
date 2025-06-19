@@ -23,20 +23,23 @@ exports.registerUser = async (req, res) => {
         if (userExists) {
             return res.status(400).json({ message: 'User with this email or username already exists' });
         }
-        let email_check = false;
-        email_existance.check(email, await function(error, response)
-        {
-            console.log(response);
-            email_check = response;
 
-        })
-        if (!email_check) {
+        // Wrap email_existance.check in a Promise to use await
+        const emailExists = await new Promise((resolve, reject) => {
+            email_existance.check(email, function(error, response) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+
+        if (!emailExists) {
             return res.status(400).json({
                 message: 'Email does not exist'
-            })
+            });
         }
-
-
 
         const user = await User.create({
             name,
@@ -46,8 +49,6 @@ exports.registerUser = async (req, res) => {
         });
 
         await user.save();
-
-
 
         if (user) {
             res.status(201).json({
