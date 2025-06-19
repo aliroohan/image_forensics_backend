@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
             email_check = response;
 
         })
-        if (email_check) {
+        if (!email_check) {
             return res.status(400).json({
                 message: 'Email does not exist'
             })
